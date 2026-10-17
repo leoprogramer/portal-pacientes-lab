@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BioTest Diagnósticos S.A.S. - Portal de Pacientes</title>
+<title>Portal de Pacientes - Laboratorio Clínico</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Segoe UI,Arial,sans-serif}
 body{background:#f0f4f8;color:#333}
-header{background:linear-gradient(135deg,#005792,#00a8a8);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+header{background:linear-gradient(135deg,#005792,#00a8a8);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
 header h1{font-size:1.4rem}header .tag{font-size:.85rem;opacity:.9}
-nav{background:#004a7f;display:flex;gap:4px;padding:0 16px;flex-wrap:wrap}
-nav button{background:none;border:none;color:#cde;padding:12px 18px;cursor:pointer;font-size:.95rem;border-bottom:3px solid transparent}
-nav button:hover{background:rgba(255,255,255,.08);color:#fff}
-nav button.activo{background:rgba(255,255,255,.12);color:#fff;border-bottom:#00d4d4 3px solid;font-weight:600}
+#navPrincipal{background:#004a7f;display:none;gap:4px;padding:0 16px;flex-wrap:wrap;align-items:center}
+#navPrincipal.visible{display:flex}
+#navPrincipal button{background:none;border:none;color:#cde;padding:12px 18px;cursor:pointer;font-size:.95rem;border-bottom:3px solid transparent}
+#navPrincipal button:hover{background:rgba(255,255,255,.08);color:#fff}
+#navPrincipal button.activo{background:rgba(255,255,255,.12);color:#fff;border-bottom:#00d4d4 3px solid;font-weight:600}
+#navPrincipal button.salir{color:#ffb3b3;margin-left:auto}
 main{max-width:1000px;margin:24px auto;padding:0 16px}
 .seccion{display:none;background:#fff;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);padding:28px}
 .seccion.visible{display:block}
@@ -31,7 +33,7 @@ input:focus,select:focus{outline:2px solid #00a8a8;border-color:#00a8a8}
 .msg.ok{display:block;background:#d1e7dd;color:#0f5132;border:1px solid #a3cfbb}
 table{width:100%;border-collapse:collapse;margin-top:16px;font-size:.95rem}
 th,td{padding:11px 10px;text-align:left;border-bottom:1px solid #dee2e6}
-th{background:#005792;color:#fff;position:sticky;top:0}
+th{background:#005792;color:#fff}
 tr:hover{background:#f1f8fb}
 .fila-cliqueable{cursor:pointer}
 .detalle-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin:16px 0}
@@ -49,33 +51,35 @@ footer{background:#004a7f;color:#cde;text-align:center;padding:14px;margin-top:4
 #overlay .modal p{color:#555;margin-bottom:8px}
 #overlay .modal button{margin-top:16px}
 .leyenda{background:#e7f3f8;border-left:4px solid #00a8a8;padding:10px 14px;border-radius:0 6px 6px 0;margin:14px 0;font-size:.9rem;color:#004a7f}
+.pasos{display:flex;gap:8px;margin:18px 0;flex-wrap:wrap}
+.paso-ind{flex:1;min-width:120px;text-align:center;padding:8px;border-radius:6px;background:#e9eef3;color:#789;font-size:.85rem;font-weight:600}
+.paso-ind.activo{background:#005792;color:#fff}
 @media(max-width:640px){.detalle-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>BioTest Diagnósticos S.A.S.</h1>
-  <span class="tag">Portal de Pacientes &mdash; Transformación Digital</span>
+  <h1>Laboratorio Clínico</h1>
+  <span class="tag">Portal de Pacientes &mdash; Consulta de Resultados</span>
 </header>
 
-<nav>
-  <button id="tabLogin" class="activo" onclick="mostrarSeccion('login')">Iniciar Sesión</button>
-  <button id="tabRecuperar" onclick="mostrarSeccion('recuperar')">Recuperar Contraseña</button>
-  <button id="tabResultados" onclick="mostrarSeccion('resultados')">Mis Resultados</button>
+<nav id="navPrincipal">
+  <button id="tabResultados" class="activo" onclick="mostrarSeccion('resultados')">Mis Resultados</button>
   <button id="tabDetalle" onclick="mostrarSeccion('detalle')">Detalle de Resultado</button>
+  <button id="tabSalir" class="salir" onclick="cerrarSesion()">Cerrar sesión</button>
 </nav>
 
 <main>
 
-<!-- ============ PF-06 / PF-07 : LOGIN ============ -->
+<!-- ============ LOGIN (PF-06) ============ -->
 <section id="seccionLogin" class="seccion visible">
   <h2>Inicio de Sesión</h2>
-  <p class="sub">Acceso seguro al portal de pacientes de BioTest Diagnósticos.</p>
+  <p class="sub">Ingrese sus credenciales para acceder a sus resultados clínicos.</p>
 
   <div class="leyenda">
-    <strong>Credenciales válidas para pruebas:</strong> usuario <code>paciente@test.com</code> &bull; contraseña <code>biotest123</code><br>
-    Cualquier otra combinación muestra un mensaje de error (PF-06).
+    <strong>Credenciales válidas de prueba:</strong> usuario <code>paciente@test.com</code> &bull; contraseña <code>paciente123</code><br>
+    Con cualquier otra combinación se muestra el mensaje de error (PF-06).
   </div>
 
   <form id="formLogin" novalidate>
@@ -89,7 +93,7 @@ footer{background:#004a7f;color:#cde;text-align:center;padding:14px;margin-top:4
   </form>
 
   <div id="errorMsg" class="msg error" role="alert">Credenciales incorrectas. Verifique usuario y contraseña.</div>
-  <div id="okMsg" class="msg ok" role="alert">Bienvenido(a) al portal de pacientes. Sesión iniciada correctamente.</div>
+  <div id="okMsg" class="msg ok" role="alert">Bienvenido(a). Sesión iniciada correctamente.</div>
 
   <p style="margin-top:22px">
     ¿Olvidó su contraseña?
@@ -97,29 +101,52 @@ footer{background:#004a7f;color:#cde;text-align:center;padding:14px;margin-top:4
   </p>
 </section>
 
-<!-- ============ PF-07 : RECUPERACIÓN ============ -->
+<!-- ============ RECUPERACIÓN (PF-07) ============ -->
 <section id="seccionRecuperar" class="seccion">
   <h2>Recuperación de Contraseña</h2>
-  <p class="sub">Ingrese su número de documento para recibir un enlace de recuperación.</p>
+  <p class="sub">Siga los pasos para restablecer su contraseña.</p>
 
-  <div class="leyenda">
-    Documento válido registrado: <code>1234567890</code> (el envío es simulado, no requiere servidor de correo).
+  <div class="pasos">
+    <div class="paso-ind activo" id="ind1">1. Identificación</div>
+    <div class="paso-ind" id="ind2">2. Verificación</div>
+    <div class="paso-ind" id="ind3">3. Nueva contraseña</div>
   </div>
 
-  <form id="formRecuperar" novalidate>
+  <!-- Paso 1 -->
+  <div id="paso1">
     <label for="doc">Número de documento de identidad</label>
     <input type="text" id="doc" name="doc" placeholder="Ej: 1234567890" autocomplete="off" inputmode="numeric">
+    <button type="button" id="btnEnviarCodigo" class="btn btn-primary">Enviar código de verificación</button>
+    <div id="msgErrDoc" class="msg error" role="alert">No se encontró un paciente con ese número de documento.</div>
+  </div>
 
-    <button type="submit" id="btnRecuperar" class="btn btn-primary">Enviar enlace de recuperación</button>
-  </form>
+  <!-- Paso 2 -->
+  <div id="paso2" class="oculto">
+    <div class="leyenda">Se envió un código al correo registrado. Para esta demostración use el código <code>123456</code>.</div>
+    <label for="codigo">Código de verificación</label>
+    <input type="text" id="codigo" name="codigo" placeholder="6 dígitos" autocomplete="off" inputmode="numeric" maxlength="6">
+    <button type="button" id="btnValidarCodigo" class="btn btn-primary">Validar código</button>
+    <div id="msgErrCodigo" class="msg error" role="alert">Código de verificación incorrecto.</div>
+  </div>
 
-  <div id="msgOkRecuperar" class="msg ok" role="alert">Se ha enviado un enlace de recuperación de contraseña al correo electrónico registrado.</div>
-  <div id="msgErrRecuperar" class="msg error" role="alert">No se encontró un paciente con ese número de documento. Verifique e intente nuevamente.</div>
+  <!-- Paso 3 -->
+  <div id="paso3" class="oculto">
+    <label for="nuevaClave">Nueva contraseña</label>
+    <input type="password" id="nuevaClave" name="nuevaClave" placeholder="Mínimo 6 caracteres" autocomplete="off">
+
+    <label for="confirmarClave">Confirmar nueva contraseña</label>
+    <input type="password" id="confirmarClave" name="confirmarClave" placeholder="Repita la contraseña" autocomplete="off">
+
+    <button type="button" id="btnCambiarClave" class="btn btn-success">Cambiar contraseña</button>
+    <div id="msgErrClave" class="msg error" role="alert">Las contraseñas no coinciden o tienen menos de 6 caracteres.</div>
+  </div>
+
+  <div id="msgOkRecuperar" class="msg ok" role="alert">Contraseña restablecida correctamente. Ya puede iniciar sesión con su nueva contraseña.</div>
 
   <button type="button" class="btn btn-sec" style="margin-top:18px" onclick="mostrarSeccion('login')">Volver al inicio de sesión</button>
 </section>
 
-<!-- ============ PF-08 / PF-10 : RESULTADOS ============ -->
+<!-- ============ RESULTADOS (PF-08 / PF-10) ============ -->
 <section id="seccionResultados" class="seccion">
   <h2>Consulta de Resultados Clínicos</h2>
   <p class="sub">Lista de órdenes y resultados médicos del paciente autenticado.</p>
@@ -149,12 +176,12 @@ footer{background:#004a7f;color:#cde;text-align:center;padding:14px;margin-top:4
   </table>
 </section>
 
-<!-- ============ PF-09 : DETALLE ============ -->
+<!-- ============ DETALLE (PF-09) ============ -->
 <section id="seccionDetalle" class="seccion">
   <h2>Detalle del Resultado Clínico</h2>
   <p class="sub">Información completa de la orden y valores de referencia.</p>
 
-  <div id="detalleVacio" class="msg error" role="alert">No hay un resultado seleccionado. Vuelva a la consulta de resultados.</div>
+  <div id="detalleVacio" class="msg error" role="alert">No hay un resultado seleccionado. Vaya a "Mis Resultados".</div>
 
   <div id="detalleContenido">
     <div class="detalle-grid">
@@ -186,7 +213,7 @@ footer{background:#004a7f;color:#cde;text-align:center;padding:14px;margin-top:4
 </main>
 
 <footer>
-  BioTest Diagnósticos S.A.S. &bull; Protección de datos de pacientes según normativa vigente &bull; Página de pruebas automatizadas
+  Laboratorio Clínico &bull; Protección de datos de pacientes según normativa vigente &bull; Página de pruebas automatizadas
 </footer>
 
 <div id="toast">Resultado descargado correctamente.</div>
@@ -194,13 +221,14 @@ footer{background:#004a7f;color:#cde;text-align:center;padding:14px;margin-top:4
 <div id="overlay">
   <div class="modal">
     <h3 id="overlayTitulo">Resultado descargado</h3>
-    <p id="overlayTexto">El archivo <strong>Resultado_ORD-000123.pdf</strong> fue descargado correctamente.</p>
+    <p id="overlayTexto">El archivo fue descargado correctamente.</p>
     <button type="button" id="btnCerrarOverlay" class="btn btn-primary" onclick="cerrarOverlay()">Cerrar</button>
   </div>
 </div>
 
 <script>
-const CREDENCIAL = {email:'paciente@test.com', password:'biotest123'};
+let CREDENCIAL = {email:'paciente@test.com', password:'paciente123'};
+const CODIGO_VERIFICACION = '123456';
 
 const RESULTADOS = [
   {
@@ -253,18 +281,34 @@ let ordenSeleccionada = 'ORD-000123';
 /* ---------- Navegación ---------- */
 function mostrarSeccion(nombre){
   document.querySelectorAll('.seccion').forEach(s=>s.classList.remove('visible'));
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('activo'));
   const mapa = {
-    login:['seccionLogin','tabLogin'],
-    recuperar:['seccionRecuperar','tabRecuperar'],
+    login:['seccionLogin',null],
+    recuperar:['seccionRecuperar',null],
     resultados:['seccionResultados','tabResultados'],
     detalle:['seccionDetalle','tabDetalle']
   };
   const [sec,tab] = mapa[nombre];
   document.getElementById(sec).classList.add('visible');
-  document.getElementById(tab).classList.add('activo');
+  if(tab){
+    document.querySelectorAll('#navPrincipal button').forEach(b=>b.classList.remove('activo'));
+    document.getElementById(tab).classList.add('activo');
+  }
   if(nombre==='resultados') renderTabla(RESULTADOS);
   if(nombre==='detalle') cargarDetalle();
+}
+
+function entrarAlPortal(){
+  document.getElementById('navPrincipal').classList.add('visible');
+  ordenSeleccionada = 'ORD-000123';
+  mostrarSeccion('resultados');
+}
+
+function cerrarSesion(){
+  document.getElementById('navPrincipal').classList.remove('visible');
+  document.getElementById('formLogin').reset();
+  document.getElementById('okMsg').style.display='none';
+  document.getElementById('errorMsg').style.display='none';
+  mostrarSeccion('login');
 }
 
 /* ---------- PF-06 Login ---------- */
@@ -273,18 +317,63 @@ document.getElementById('formLogin').addEventListener('submit', function(e){
   const email = document.getElementById('email').value.trim();
   const pass  = document.getElementById('password').value;
   const ok    = (email===CREDENCIAL.email && pass===CREDENCIAL.password);
-  document.getElementById('okMsg').classList.toggle('ok', ok);
-  document.getElementById('okMsg').style.display = ok ? 'block' : 'none';
-  document.getElementById('errorMsg').style.display = ok ? 'none' : 'block';
+  if(ok){
+    document.getElementById('okMsg').style.display='block';
+    document.getElementById('errorMsg').style.display='none';
+    setTimeout(entrarAlPortal, 400);
+  }else{
+    document.getElementById('errorMsg').style.display='block';
+    document.getElementById('okMsg').style.display='none';
+  }
 });
 
-/* ---------- PF-07 Recuperación ---------- */
-document.getElementById('formRecuperar').addEventListener('submit', function(e){
-  e.preventDefault();
+/* ---------- PF-07 Recuperación en 3 pasos ---------- */
+function setIndicador(n){
+  [1,2,3].forEach(i=>document.getElementById('ind'+i).classList.toggle('activo', i<=n));
+}
+document.getElementById('btnEnviarCodigo').addEventListener('click', function(){
   const doc = document.getElementById('doc').value.trim();
   const ok  = RESULTADOS.some(r=>r.doc===doc);
-  document.getElementById('msgOkRecuperar').style.display = ok ? 'block' : 'none';
-  document.getElementById('msgErrRecuperar').style.display = ok ? 'none' : 'block';
+  document.getElementById('msgErrDoc').style.display = ok ? 'none' : 'block';
+  if(ok){
+    document.getElementById('paso1').classList.add('oculto');
+    document.getElementById('paso2').classList.remove('oculto');
+    setIndicador(2);
+  }
+});
+document.getElementById('btnValidarCodigo').addEventListener('click', function(){
+  const c = document.getElementById('codigo').value.trim();
+  const ok = (c===CODIGO_VERIFICACION);
+  document.getElementById('msgErrCodigo').style.display = ok ? 'none' : 'block';
+  if(ok){
+    document.getElementById('paso2').classList.add('oculto');
+    document.getElementById('paso3').classList.remove('oculto');
+    setIndicador(3);
+  }
+});
+document.getElementById('btnCambiarClave').addEventListener('click', function(){
+  const p1 = document.getElementById('nuevaClave').value;
+  const p2 = document.getElementById('confirmarClave').value;
+  const ok = (p1.length>=6 && p1===p2);
+  document.getElementById('msgErrClave').style.display = ok ? 'none' : 'block';
+  if(ok){
+    CREDENCIAL.password = p1;
+    document.getElementById('msgOkRecuperar').style.display='block';
+    document.getElementById('paso3').classList.add('oculto');
+    document.getElementById('btnCambiarClave').classList.add('oculto');
+    setTimeout(function(){
+      document.getElementById('paso1').classList.remove('oculto');
+      setIndicador(1);
+      document.getElementById('msgOkRecuperar').style.display='none';
+      document.getElementById('btnCambiarClave').classList.remove('oculto');
+      document.getElementById('formLogin').reset();
+      document.getElementById('doc').value='';
+      document.getElementById('codigo').value='';
+      document.getElementById('nuevaClave').value='';
+      document.getElementById('confirmarClave').value='';
+      mostrarSeccion('login');
+    }, 2600);
+  }
 });
 
 /* ---------- PF-08 Tabla + filtro ---------- */
@@ -366,16 +455,15 @@ function cargarDetalle(){
 
 /* ---------- PF-10 Descarga ---------- */
 function descargarResultado(orden){
+  const r = RESULTADOS.find(x=>x.orden===orden);
   const contenido =
-    'BioTest Diagnosticos S.A.S.\n'+
+    'Laboratorio Clinico\n'+
     'Resultado Clinico - Orden '+orden+'\n'+
     '========================================\n\n'+
-    'Paciente: Juan Perez\nDocumento: 1234567890\n'+
-    'Sede: Sede Bogota Norte\nMedico: Dra. Laura Gomez\n\n'+
+    'Paciente: '+r.paciente+'\nDocumento: '+r.doc+'\n'+
+    'Sede: '+r.sede+'\nMedico: '+r.medico+'\n\n'+
     'Detalle:\n'+
-    RESULTADOS.find(r=>r.orden===orden).valores.map(v=>
-      v.p+': '+v.r+' '+v.u+'  (Ref: '+v.ref+')  '+v.i
-    ).join('\n')+
+    r.valores.map(v=> v.p+': '+v.r+' '+v.u+'  (Ref: '+v.ref+')  '+v.i ).join('\n')+
     '\n\nDocumento generado con fines de prueba automatizada.';
   const blob = new Blob([contenido],{type:'text/plain;charset=utf-8'});
   const a = document.createElement('a');
