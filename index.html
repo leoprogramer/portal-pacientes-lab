@@ -358,21 +358,10 @@ document.getElementById('btnCambiarClave').addEventListener('click', function(){
   document.getElementById('msgErrClave').style.display = ok ? 'none' : 'block';
   if(ok){
     CREDENCIAL.password = p1;
+    document.getElementById('msgErrClave').style.display='none';
     document.getElementById('msgOkRecuperar').style.display='block';
     document.getElementById('paso3').classList.add('oculto');
-    document.getElementById('btnCambiarClave').classList.add('oculto');
-    setTimeout(function(){
-      document.getElementById('paso1').classList.remove('oculto');
-      setIndicador(1);
-      document.getElementById('msgOkRecuperar').style.display='none';
-      document.getElementById('btnCambiarClave').classList.remove('oculto');
-      document.getElementById('formLogin').reset();
-      document.getElementById('doc').value='';
-      document.getElementById('codigo').value='';
-      document.getElementById('nuevaClave').value='';
-      document.getElementById('confirmarClave').value='';
-      mostrarSeccion('login');
-    }, 2600);
+    document.getElementById('msgOkRecuperar').scrollIntoView({behavior:'smooth',block:'center'});
   }
 });
 
